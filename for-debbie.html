@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A little surprise for you</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&display=swap">
+<style>
+:root{--ink:#4a2c4a;--rose:#c2587a;--gold:#b98744;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:linear-gradient(135deg,#fde2e4,#eadcf8,#d7edf5,#fff0d9,#fde2e4);background-size:400% 400%;animation:flow 26s ease infinite;color:var(--ink);font-family:'Cormorant Garamond',Georgia,serif;overflow-x:hidden;text-align:center}
+@keyframes flow{50%{background-position:100% 50%}}
+.orb{position:fixed;border-radius:50%;filter:blur(70px);opacity:.5;z-index:0;animation:drift 16s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(40px,-50px) scale(1.15)}}
+canvas{position:fixed;inset:0;pointer-events:none;z-index:6}
+.screen{position:relative;z-index:2;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;transition:opacity 1s}
+.hidden{display:none}.fade{opacity:0}
+.hint{letter-spacing:.28em;text-transform:uppercase;font-size:.85rem;color:var(--rose);margin-bottom:28px}
+.gift{background:none;border:0;cursor:pointer;width:170px;height:170px;animation:float 3.2s ease-in-out infinite}
+.gift:focus-visible{outline:2px solid var(--rose);outline-offset:8px}
+.gift svg{width:100%;height:100%;filter:drop-shadow(0 8px 22px rgba(194,88,122,.35))}
+.tap{margin-top:26px;font-style:italic;font-size:1.25rem;opacity:.85}
+@keyframes float{50%{transform:translateY(-12px) rotate(2deg)}}
+.hb{font-size:1.4rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin:0}
+h1{font-family:'Great Vibes',cursive;font-weight:400;font-size:clamp(3.6rem,16vw,7rem);margin:0 0 4px;line-height:1.15;background:linear-gradient(90deg,#c2587a,#d9a05b,#9b7fd1,#c2587a);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 8s linear infinite}
+@keyframes shine{to{background-position:300% 0}}
+.sub{font-style:italic;font-size:1.25rem;margin-bottom:24px}
+.card{max-width:540px;padding:26px 24px;border-radius:24px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 10px 40px rgba(155,127,209,.2)}
+.letter{font-size:clamp(1.15rem,3.8vw,1.42rem);line-height:1.7}
+.letter p{margin:0 0 14px;opacity:0;transform:translateY(8px);transition:opacity 1.6s,transform 1.6s}
+.letter p.show{opacity:1;transform:none}
+.letter .verse{margin:20px 0 6px;padding-top:16px;border-top:1px solid rgba(194,88,122,.3);font-style:italic;color:#6b3f6b}
+.letter .ref{display:block;margin-top:6px;font-style:normal;font-size:1rem;letter-spacing:.15em;color:var(--gold)}
+.letter .sign{margin:14px 0 0;font-family:'Great Vibes',cursive;font-size:2rem;color:var(--rose)}
+.wish{margin-top:26px;background:linear-gradient(90deg,#f6a6bf,#f9c98d);color:#4a2c4a;border:0;padding:13px 30px;border-radius:40px;font:inherit;font-weight:600;font-size:1.15rem;letter-spacing:.08em;cursor:pointer;opacity:0;transition:opacity 1.5s,transform .2s;box-shadow:0 6px 20px rgba(246,166,191,.5)}
+.wish.show{opacity:1}.wish:active{transform:scale(.95)}
+.balloon{position:fixed;bottom:-160px;z-index:1;border-radius:50% 50% 50% 50%/58% 58% 42% 42%;animation:rise linear forwards;opacity:.9}
+.balloon::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:70px;background:rgba(74,44,74,.3)}
+@keyframes rise{to{transform:translateY(-130vh) translateX(var(--sw))}}
+</style>
+</head>
+<body>
+<div class="orb" style="width:300px;height:300px;background:#f6a6bf;top:5%;left:-8%"></div>
+<div class="orb" style="width:340px;height:340px;background:#a8e0d6;bottom:0;right:-10%;animation-delay:-5s"></div>
+<div class="orb" style="width:260px;height:260px;background:#cbb6f2;top:45%;left:40%;animation-delay:-9s"></div>
+<canvas id="c"></canvas>
+
+<div class="screen" id="s1">
+  <div class="hint">Someone who loves you has a surprise</div>
+  <button class="gift" id="gift" aria-label="Open your gift">
+    <svg viewBox="0 0 100 100"><rect x="14" y="40" width="72" height="48" rx="5" fill="#f6a6bf"/><rect x="10" y="30" width="80" height="16" rx="5" fill="#c9b3f0"/><rect x="45" y="30" width="10" height="58" fill="#f9d9a0"/><path d="M50 30c-16-20-30-4-15 1zM50 30c16-20 30-4 15 1z" fill="#f9d9a0"/><circle cx="50" cy="30" r="4" fill="#fff"/></svg>
+  </button>
+  <div class="tap">Tap to open</div>
+</div>
+
+<div class="screen hidden fade" id="s2">
+  <p class="hb">Happy Birthday</p>
+  <h1 id="title"></h1>
+  <div class="sub">With love, from all of us</div>
+  <div class="card"><div class="letter" id="letter"></div></div>
+  <button class="wish" id="wish">Make a wish ✦</button>
+</div>
+
+<script>
+/* ===== EDIT THESE ===== */
+var NAME = "Debbie";
+var FROM = "With love, your friends at Watoto Church";
+var LINES = [
+  "Thank you for your patience, your love, and a heart that truly cares.",
+  "You have prayed for us, listened to us, and shown us what it means to serve with joy.",
+  "We are so blessed to have you in our lives."
+];
+var VERSE = "The LORD bless thee, and keep thee: The LORD make his face shine upon thee, and be gracious unto thee.";
+var REF = "Numbers 6:24–25";
+/* ====================== */
+var COLORS=['#f6a6bf','#f9c98d','#a8d8ea','#c9b3f0','#a8e0d6','#fbe3a1','#f7b7a3'];
+var cv=document.getElementById('c'),cx=cv.getContext('2d'),parts=[];
+function size(){cv.width=innerWidth;cv.height=innerHeight;}
+size();addEventListener('resize',size);
+function burst(n){for(var i=0;i<n;i++)parts.push({x:cv.width/2,y:cv.height/2.4,vx:(Math.random()-.5)*14,vy:Math.random()*-13-2,s:Math.random()*5+3,l:1,r:Math.random()>.5,c:COLORS[i%COLORS.length]});}
+(function loop(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  parts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.vy+=.22;p.vx*=.99;p.l-=.006;cx.globalAlpha=Math.max(p.l,0);cx.fillStyle=p.c;
+    if(p.r){cx.beginPath();cx.arc(p.x,p.y,p.s/1.5,0,6.3);cx.fill();}else cx.fillRect(p.x,p.y,p.s,p.s*1.6);});
+  parts=parts.filter(function(p){return p.l>0;});
+  requestAnimationFrame(loop);
+})();
+function balloons(n){
+  for(var i=0;i<n;i++)setTimeout(function(){
+    var b=document.createElement('div'),w=34+Math.random()*34;
+    b.className='balloon';b.style.width=w+'px';b.style.height=w*1.2+'px';
+    b.style.left=Math.random()*94+'vw';b.style.background='radial-gradient(circle at 32% 28%,#fffc,'+COLORS[Math.floor(Math.random()*COLORS.length)]+' 60%)';
+    b.style.animationDuration=(9+Math.random()*7)+'s';b.style.setProperty('--sw',(Math.random()*80-40)+'px');
+    document.body.appendChild(b);setTimeout(function(){b.remove();},17000);
+  },i*350);
+}
+function playTune(){
+  try{
+    var AC=window.AudioContext||window.webkitAudioContext,ac=new AC(),t=ac.currentTime+.2,b=.55;
+    var seq=[[392,.75],[392,.25],[440,1],[392,1],[523,1],[494,2],[392,.75],[392,.25],[440,1],[392,1],[587,1],[523,2],[392,.75],[392,.25],[784,1],[659,1],[523,1],[494,1],[440,1],[698,.75],[698,.25],[659,1],[523,1],[587,1],[523,2]];
+    seq.forEach(function(n){var o=ac.createOscillator(),g=ac.createGain();o.type='triangle';o.frequency.value=n[0];
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.16,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+n[1]*b+.5);
+      o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+n[1]*b+.55);t+=n[1]*b;});
+  }catch(e){}
+}
+document.getElementById('gift').addEventListener('click',function(){
+  var s1=document.getElementById('s1'),s2=document.getElementById('s2');
+  playTune();burst(150);balloons(20);s1.classList.add('fade');
+  setTimeout(function(){
+    s1.classList.add('hidden');s2.classList.remove('hidden');
+    document.getElementById('title').textContent=NAME;
+    var box=document.getElementById('letter'),ps=[];
+    LINES.forEach(function(t){var p=document.createElement('p');p.textContent=t;box.appendChild(p);ps.push(p);});
+    var v=document.createElement('p');v.className='verse';v.textContent='“'+VERSE+'”';
+    var r=document.createElement('span');r.className='ref';r.textContent=REF;v.appendChild(r);box.appendChild(v);ps.push(v);
+    var s=document.createElement('p');s.className='sign';s.textContent=FROM;box.appendChild(s);ps.push(s);
+    requestAnimationFrame(function(){s2.classList.remove('fade');});
+    ps.forEach(function(p,i){setTimeout(function(){p.classList.add('show');},1200+i*2300);});
+    setTimeout(function(){document.getElementById('wish').classList.add('show');},1200+ps.length*2300);
+  },900);
+});
+document.getElementById('wish').addEventListener('click',function(){burst(240);balloons(12);});
+</script>
+</body>
+</html>
